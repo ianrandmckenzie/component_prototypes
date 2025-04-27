@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Bar</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+  <form id="searchForm" class="flex items-center bg-white shadow rounded">
+    <div class="relative">
+      <button type="button" id="engineBtn" class="flex items-center px-3 focus:outline-none">
+        <!-- Default Brave Icon -->
+        <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <rect width="20" height="20" fill="#F28A30" />
+        </svg>
+      </button>
+      <ul id="engineList" class="hidden absolute top-full left-0 mt-1 bg-white border rounded shadow">
+        <li data-engine="brave" class="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer">
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="20" fill="#F28A30" />
+          </svg>
+          <span class="ml-2 text-sm">Brave</span>
+        </li>
+        <li data-engine="duckduckgo" class="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer">
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="20" fill="#DE5833" />
+          </svg>
+          <span class="ml-2 text-sm">DuckDuckGo</span>
+        </li>
+        <li data-engine="qwant" class="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer">
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="20" fill="#5C2E91" />
+          </svg>
+          <span class="ml-2 text-sm">Qwant</span>
+        </li>
+        <li data-engine="startpage" class="flex items-center px-3 py-2 hover:bg-gray-200 cursor-pointer">
+          <svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <rect width="20" height="20" fill="#4A90E2" />
+          </svg>
+          <span class="ml-2 text-sm">Startpage</span>
+        </li>
+      </ul>
+    </div>
+    <input type="text" id="searchInput" placeholder="Search..." class="px-4 py-2 focus:outline-none w-64" />
+    <button type="submit" class="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 focus:outline-none rounded-r">Go</button>
+  </form>
+
+  <script>
+    // Search engine URL templates
+    const engines = {
+      brave:   'https://search.brave.com/search?q=%s&source=dashSage',
+      duckduckgo: 'https://duckduckgo.com/?q=%s&t=dashSage',
+      qwant:   'https://www.qwant.com/?q=%s&client=dashSage',
+      startpage: 'https://www.startpage.com/do/search?q=%s&segment=startpage.dashSage'
+    };
+
+    let selected = 'brave';
+
+    const engineBtn = document.getElementById('engineBtn');
+    const engineList = document.getElementById('engineList');
+    const form = document.getElementById('searchForm');
+
+    // Toggle dropdown
+    engineBtn.addEventListener('click', () => {
+      engineList.classList.toggle('hidden');
+    });
+
+    // Select engine
+    engineList.querySelectorAll('li').forEach(item => {
+      item.addEventListener('click', () => {
+        selected = item.getAttribute('data-engine');
+        // Update icon
+        engineBtn.innerHTML = item.innerHTML;
+        engineList.classList.add('hidden');
+      });
+    });
+
+    // Handle form submission
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      const url = engines[selected].replace('%s', encodeURIComponent(query));
+      window.open(url, '_blank');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!engineBtn.contains(e.target) && !engineList.contains(e.target)) {
+        engineList.classList.add('hidden');
+      }
+    });
+  </script>
+</body>
+</html>
