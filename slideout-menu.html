@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slideout Menu</title>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { height: 100%; }
+    /* Utility to hide text when collapsed */
+    .collapsed .menu-text { display: none; }
+    /* Bottom menu orientation when collapsed */
+    .collapsed .bottom-menu { flex-direction: column; height: auto; }
+  </style>
+</head>
+<body class="flex bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="relative flex flex-col bg-white dark:bg-gray-800 shadow-lg h-full w-64 transition-width duration-300 ease-out">
+    <!-- Resize Handle -->
+    <div id="handle" class="absolute right-0 top-0 bottom-0 w-1 hover:bg-gray-300 dark:hover:bg-gray-600 cursor-ew-resize"></div>
+
+    <!-- Top Menu -->
+    <nav class="p-4 flex flex-col space-y-2 border-b border-gray-200 dark:border-gray-700">
+      <a href="/create" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+        <!-- Square Icon -->
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" fill="currentColor"/></svg>
+        <span class="menu-text">+ Create</span>
+      </a>
+      <a href="/home" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+        <!-- Circle Icon -->
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+        <span class="menu-text">Home</span>
+      </a>
+      <a href="/features" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+        <!-- Triangle Icon -->
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><polygon points="12,4 20,20 4,20" fill="currentColor"/></svg>
+        <span class="menu-text">Features</span>
+      </a>
+      <a href="/inbox" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+        <!-- Star Icon -->
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><polygon points="12,2 15,11 24,11 17,17 19,26 12,21 5,26 7,17 0,11 9,11" fill="currentColor"/></svg>
+        <span class="menu-text">Inbox</span>
+      </a>
+    </nav>
+
+    <!-- Submenus -->
+    <div class="p-4 flex-1 overflow-y-auto">
+      <div class="mb-4">
+        <h3 class="px-2 text-gray-500 dark:text-gray-400 uppercase text-xs tracking-wider menu-text">Section One</h3>
+        <a href="#" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+          <!-- Hexagon Icon -->
+          <svg class="w-6 h-6" viewBox="0 0 24 24"><polygon points="12,2 20,8 20,16 12,22 4,16 4,8" fill="currentColor"/></svg>
+          <span class="menu-text">Link A</span>
+        </a>
+        <div class="relative group">
+          <a href="#" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+            <svg class="w-6 h-6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" fill="currentColor"/></svg>
+            <span class="menu-text">More Options</span>
+          </a>
+          <!-- Dropdown to side -->
+          <div class="absolute left-full top-0 ml-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded hidden group-hover:block">
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Option 1</a>
+            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Option 2</a>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="px-2 text-gray-500 dark:text-gray-400 uppercase text-xs tracking-wider menu-text">Section Two</h3>
+        <a href="#" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+          <svg class="w-6 h-6" viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" fill="currentColor"/></svg>
+          <span class="menu-text">Link B</span>
+        </a>
+        <a href="#" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+          <svg class="w-6 h-6" viewBox="0 0 24 24"><polygon points="12,2 20,8 20,16 12,22 4,16 4,8" fill="currentColor"/></svg>
+          <span class="menu-text">Link C</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom Menu -->
+    <nav class="bottom-menu flex items-center justify-between p-4 border-t border-gray-200 dark:border-gray-700">
+      <a href="/settings" class="flex items-center space-x-2 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded">
+        <!-- Gear Icon -->
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+        <span class="menu-text">Settings</span>
+      </a>
+      <!-- Secondary CTA -->
+      <a href="#" class="flex items-center space-x-2 p-2 bg-blue-500 dark:bg-blue-600 text-white rounded hover:bg-blue-600 dark:hover:bg-blue-500">
+        <svg class="w-6 h-6" viewBox="0 0 24 24"><polygon points="4,4 20,12 4,20" fill="currentColor"/></svg>
+        <span class="menu-text">Call to Action</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="flex-1 p-8">
+    <h1 class="text-2xl font-bold">Main Content</h1>
+    <p>Placeholder for application content.</p>
+  </div>
+
+  <!-- JavaScript for resizing and collapsing -->
+  <script>
+    (function() {
+      const sidebar = document.getElementById('sidebar');
+      const handle = document.getElementById('handle');
+      if (!sidebar || !handle) return;
+
+      const widths = [
+        { cls: 'w-16', px: 64 },
+        { cls: 'w-72', px: 288 },
+        { cls: 'w-84', px: 336 },
+        { cls: 'w-96', px: 384 }
+      ];
+
+      let isDragging = false;
+
+      handle.addEventListener('mousedown', e => {
+        isDragging = true;
+        document.body.style.userSelect = 'none';
+      });
+
+      document.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const rect = sidebar.getBoundingClientRect();
+        const newWidth = e.clientX - rect.left;
+        sidebar.style.width = newWidth + 'px';
+      });
+
+      document.addEventListener('mouseup', e => {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.style.userSelect = '';
+        sidebar.style.width = '';
+        const rect = sidebar.getBoundingClientRect();
+        let closest = widths[0];
+        widths.forEach(w => {
+          if (Math.abs(rect.width - w.px) < Math.abs(rect.width - closest.px)) {
+            closest = w;
+          }
+        });
+        sidebar.classList.remove('w-16','w-72','w-84','w-96');
+        sidebar.classList.add(closest.cls);
+        if (closest.cls === 'w-16') {
+          sidebar.classList.add('collapsed');
+        } else {
+          sidebar.classList.remove('collapsed');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

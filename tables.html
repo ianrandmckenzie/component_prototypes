@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Tailwind CSS (with dark mode via class strategy) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 p-4 w-full">
+  <div id="shopping-cart" class="mb-8 w-full"></div>
+  <div id="employee-directory" class="mb-8 w-full"></div>
+  <div id="pricing-plans" class="mb-8 w-full"></div>
+  <div id="invoice" class="mb-8 w-full"></div>
+
+  <script>
+  (function(){
+    
+    // Three example datasets
+    const shoppingCartData = {
+      columns: [
+        { key:'icon',    label:'Item',    type:'icon',   width:'w-48' },
+        { key:'name',    label:'Name',    type:'string', width:'w-64' },
+        { key:'qty',     label:'Qty',     type:'integer' },
+        { key:'price',   label:'Price',   type:'float' },
+        { key:'total',   label:'Total',   type:'float' },
+        { key:'inStock', label:'In Stock',type:'boolean'},
+        { key:'added',   label:'Added On',type:'date' }
+      ],
+      rows: [
+        { icon:'square', name:'Widget A', qty:3, price:19.99, total:59.97, inStock:true,  added:'2025-04-20' },
+        { icon:'circle', name:'Gadget B', qty:1, price:149.50,total:149.50,inStock:false, added:'2025-04-22' },
+        { icon:'triangle', name:'Doohickey C', qty:5, price:4.25, total:21.25, inStock:true,  added:'2025-04-25' }
+      ]
+    };
+
+    const employeeDirectoryData = {
+      columns: [
+        { key:'photo',     label:'Photo',    type:'image',  width:'w-32' },
+        { key:'name',      label:'Name',     type:'string', width:'w-56' },
+        { key:'position',  label:'Role',     type:'string' },
+        { key:'dept',      label:'Dept.',    type:'string' },
+        { key:'email',     label:'Email',    type:'link',   width:'w-64' },
+        { key:'phone',     label:'Phone',    type:'link' },
+        { key:'hireDate',  label:'Hired',    type:'date' }
+      ],
+      rows: [
+        { photo:'./placeholders/square.jpeg', name:'Alice Johnson', position:'Manager', dept:'Sales',  email:'mailto:alice@example.com', phone:'tel:+1234567890', hireDate:'2020-06-15' },
+        { photo:'./placeholders/square.jpeg', name:'Bob Smith',     position:'Engineer',dept:'R&D',    email:'mailto:bob@example.com',   phone:'tel:+1987654321', hireDate:'2019-11-01' },
+        { photo:'./placeholders/square.jpeg', name:'Carol Lee',     position:'Designer',dept:'UX',     email:'mailto:carol@example.com', phone:'tel:+1092837465', hireDate:'2021-01-22' }
+      ]
+    };
+
+    const pricingPlansData = {
+      columns: [
+        { key:'plan',      label:'Plan',      type:'string',    width:'w-48' },
+        { key:'price',     label:'Price/mo',  type:'float' },
+        { key:'discount',  label:'Discount',  type:'percentage' },
+        { key:'popular',   label:'Popular',   type:'boolean' },
+        { key:'signup',    label:'Signup',    type:'link' },
+        { key:'duration',  label:'Duration',  type:'string' }
+      ],
+      rows: [
+        { plan:'Basic',    price:0.00,    discount:0,    popular:false, signup:'#', duration:'Monthly' },
+        { plan:'Pro',      price:29.99,   discount:10,   popular:true,  signup:'#', duration:'Monthly' },
+        { plan:'Enterprise',price:99.99,  discount:20,   popular:false, signup:'#', duration:'Annual' }
+      ]
+    };
+
+    // 4) New wide Invoice dataset
+    const invoiceData = {
+      columns: [
+        { key:'invNo',      label:'Invoice #',     type:'string', width:'w-32' },
+        { key:'date',       label:'Date',          type:'date' },
+        { key:'customer',   label:'Customer',      type:'string', width:'w-56' },
+        { key:'itemDesc',   label:'Item Description', type:'string', width:'w-64' },
+        { key:'qty',        label:'Qty',           type:'integer' },
+        { key:'unitPrice',  label:'Unit Price',    type:'float' },
+        { key:'taxRate',    label:'Tax Rate',      type:'percentage' },
+        { key:'taxAmt',     label:'Tax Amount',    type:'float' },
+        { key:'subTotal',   label:'Subtotal',      type:'float' },
+        { key:'total',      label:'Total',         type:'float' },
+        { key:'paid',       label:'Paid',          type:'boolean' },
+        { key:'dueDate',    label:'Due Date',      type:'date' },
+        { key:'status',     label:'Status',        type:'string' }
+      ],
+      rows: [
+        {
+          invNo:'INV-1001', date:'2025-01-15', customer:'Acme Corp',
+          itemDesc:'Super Deluxe Widget (Model X)', qty:10,
+          unitPrice:49.99, taxRate:8.25, taxAmt:41.24,
+          subTotal:499.90, total:541.14, paid:true,
+          dueDate:'2025-02-15', status:'Paid'
+        },
+        {
+          invNo:'INV-1002', date:'2025-02-10', customer:'Beta LLC',
+          itemDesc:'Gadget Pro Kit', qty:5,
+          unitPrice:199.99, taxRate:8.25, taxAmt:82.50,
+          subTotal:999.95, total:1_082.45, paid:false,
+          dueDate:'2025-03-10', status:'Pending'
+        },
+        {
+          invNo:'INV-1003', date:'2025-03-05', customer:'Gamma Inc',
+          itemDesc:'Installation Services', qty:1,
+          unitPrice:500.00, taxRate:0, taxAmt:0,
+          subTotal:500.00, total:500.00, paid:false,
+          dueDate:'2025-04-05', status:'Overdue'
+        }
+      ]
+    };
+
+    // SVG map (same as before)
+    const shapeSVG = {
+      square:   '<svg class="h-6 w-6" viewBox="0 0 100 100"><rect width="100" height="100" fill="currentColor"/></svg>',
+      circle:   '<svg class="h-6 w-6" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="currentColor"/></svg>',
+      triangle: '<svg class="h-6 w-6" viewBox="0 0 100 100"><polygon points="50,0 100,100 0,100" fill="currentColor"/></svg>',
+      star:     '<svg class="h-6 w-6" viewBox="0 0 100 100"><polygon points="50,0 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" fill="currentColor"/></svg>',
+      hexagon:  '<svg class="h-6 w-6" viewBox="0 0 100 100"><polygon points="25,0 75,0 100,50 75,100 25,100 0,50" fill="currentColor"/></svg>'
+    };
+
+    function renderTable(containerId, data){
+      const container = document.getElementById(containerId);
+      if(!container || !data?.columns || !data?.rows) return;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'relative group/tablewrap w-full';
+      const leftBtn = document.createElement('button');
+      const rightBtn = document.createElement('button');
+      [leftBtn, rightBtn].forEach(btn=>{
+        btn.type='button';
+        btn.className = 'absolute inset-y-0 flex items-center bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-opacity opacity-0 focus:outline-none px-2 group-hover/tablewrap:opacity-100';
+        btn.setAttribute('aria-hidden','true');
+      });
+
+      const isRTL = getComputedStyle(document.documentElement).direction==='rtl';
+      leftBtn.classList.add(isRTL?'right-0':'left-0');
+      rightBtn.classList.add(isRTL?'left-0':'right-0');
+      leftBtn.innerHTML  = isRTL? '&gt;': '&lt;';
+      rightBtn.innerHTML = isRTL? '&lt;': '&gt;';
+      wrap.append(leftBtn, rightBtn);
+
+      const tblWrap = document.createElement('div');
+      tblWrap.className = 'w-full overflow-x-auto rounded-lg shadow-md';
+      tblWrap.setAttribute('role','region');
+      tblWrap.setAttribute('aria-label', data.columns.key+' table');
+      wrap.appendChild(tblWrap);
+
+      const table = document.createElement('table');
+      table.className = 'table-auto min-w-full w-max divide-y divide-gray-200 dark:divide-gray-700';
+      table.setAttribute('role','grid');
+      table.setAttribute('aria-rowcount', data.rows.length + 1);
+      table.setAttribute('aria-colcount', data.columns.length);
+      tblWrap.appendChild(table);
+
+      // header & body (identical to before)...
+      const thead = document.createElement('thead');
+      thead.className = 'bg-gray-50 dark:bg-gray-800';
+      table.appendChild(thead);
+      const hrow = document.createElement('tr');
+      thead.appendChild(hrow);
+      data.columns.forEach(col=>{
+        const th = document.createElement('th');
+        th.scope='col'; th.setAttribute('role','columnheader'); th.tabIndex=0;
+        th.className = [
+          'px-4 py-2 whitespace-nowrap text-left text-sm font-medium text-gray-900 dark:text-gray-100',
+          col.width||'w-48','h-16',
+          'focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+        ].join(' ');
+        th.textContent = col.label;
+        hrow.appendChild(th);
+      });
+      const tbody = document.createElement('tbody');
+      tbody.className = 'bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700';
+      table.appendChild(tbody);
+      data.rows.forEach(row=>{
+        const tr = document.createElement('tr');
+        tbody.appendChild(tr);
+        data.columns.forEach(col=>{
+          const td = document.createElement('td');
+          td.setAttribute('role','gridcell'); td.tabIndex=0;
+          td.className = [
+            'px-4 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300',
+            col.width||'w-48', row.height||'h-16',
+            'focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400'
+          ].join(' ');
+          const val = row[col.key];
+          switch(col.type){
+            case 'string': case 'integer': case 'float':
+              td.textContent = val; break;
+            case 'percentage':
+              td.textContent = val + '%'; break;
+            case 'boolean':
+              td.innerHTML = val ? shapeSVG.circle : shapeSVG.hexagon; break;
+            case 'image':
+              td.innerHTML = `<img src="${val}" alt="${col.label}" class="max-h-full max-w-full rounded-full object-contain"/>`; break;
+            case 'link':
+              td.innerHTML = `<a href="${val}" class="text-indigo-600 dark:text-indigo-400 underline break-all">${val}</a>`; break;
+            case 'date':
+              td.innerHTML = `<time datetime="${val}">${new Date(val).toLocaleDateString()}</time>`; break;
+            case 'icon':
+              td.innerHTML = shapeSVG[val] || ''; break;
+            default:
+              td.textContent = val;
+          }
+          tr.appendChild(td);
+        });
+      });
+
+      container.appendChild(wrap);
+
+      // show/hide & disable logic
+      function updateScrollButtons(){
+        const fullWidth    = table.scrollWidth;     // total content width
+        const visibleWidth = tblWrap.clientWidth;   // viewport width
+        const scrollLeft   = tblWrap.scrollLeft;
+        const scrollRight  = fullWidth - visibleWidth - scrollLeft;
+        const scrollable   = fullWidth > visibleWidth + 1;
+      
+        if (!scrollable) {
+            leftBtn.classList.add('invisible');
+            rightBtn.classList.add('invisible');
+            return;
+        }
+
+        // Otherwise, show each button only if there's content out of view
+        leftBtn.classList.toggle('invisible', scrollLeft <= 0);
+        rightBtn.classList.toggle('invisible', scrollRight <= 1);
+      }
+
+      // helper to scroll 3 columns
+      function getNextScrollAmount(n){
+        const widths = Array.from(table.querySelectorAll('th')).map(th=>th.offsetWidth);
+        let cum=0, idx=0, sl=tblWrap.scrollLeft;
+        for(let w of widths){ cum+=w; if(cum>sl) break; idx++; }
+        let amt=0;
+        for(let i=idx; i<idx+n && i<widths.length; i++) amt+=widths[i];
+        return amt;
+      }
+
+      leftBtn.addEventListener('click', ()=>{
+        tblWrap.scrollBy({ left: (isRTL ? getNextScrollAmount(3) : -getNextScrollAmount(3)), behavior:'smooth' });
+      });
+      rightBtn.addEventListener('click', ()=>{
+        tblWrap.scrollBy({ left: (isRTL ? -getNextScrollAmount(3) : getNextScrollAmount(3)), behavior:'smooth' });
+      });
+      tblWrap.addEventListener('scroll', updateScrollButtons);
+      window.addEventListener('resize', updateScrollButtons);
+      requestAnimationFrame(updateScrollButtons);
+
+      // long-press context & keyboard nav (same as before)...
+      const LONG_PRESS = 600;
+      let timer = null;
+      tblWrap.addEventListener('touchstart', e => {
+        const cell = e.target.closest('td,th');
+        if (!cell) return;
+        timer = setTimeout(() => cell.dispatchEvent(new MouseEvent('contextmenu',{ bubbles:true })), LONG_PRESS);
+      });
+      ['touchend','touchmove','touchcancel'].forEach(evt=> tblWrap.addEventListener(evt, ()=> clearTimeout(timer)));
+      tblWrap.addEventListener('keydown', e=>{
+        const cell = e.target.closest('td,th');
+        if(!cell) return;
+        const allRows = Array.from(table.rows);
+        const rowIdx = allRows.indexOf(cell.parentElement);
+        const colIdx = Array.from(cell.parentElement.children).indexOf(cell);
+        let next=null;
+        if(e.key==='ArrowRight') next = cell.nextElementSibling;
+        if(e.key==='ArrowLeft')  next = cell.previousElementSibling;
+        if(e.key==='ArrowDown')  next = allRows[rowIdx+1]?.children[colIdx];
+        if(e.key==='ArrowUp')    next = allRows[rowIdx-1]?.children[colIdx];
+        if(next){ e.preventDefault(); next.focus(); }
+      });
+    }
+
+    // initialize all
+    renderTable('shopping-cart', shoppingCartData);
+    renderTable('employee-directory', employeeDirectoryData);
+    renderTable('pricing-plans', pricingPlansData);
+    renderTable('invoice', invoiceData);
+
+  })();
+  </script>
+</body>
+</html>

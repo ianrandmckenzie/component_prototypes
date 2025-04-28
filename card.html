@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Component</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+  <div class="max-w-sm bg-white rounded-2xl shadow-lg relative">
+    <!-- Image / placeholder -->
+    <div class="h-48 bg-gray-200 flex items-center justify-center rounded-t-2xl">
+      <!-- If you have an image, swap these two -->
+      <span class="text-gray-500">No Image</span>
+      <!-- <img src="your-image.jpg" alt="Card image" class="absolute inset-0 w-full h-full object-cover"> -->
+    </div>
+
+    <!-- Flag button + dropdown -->
+    <button id="flagBtn"
+            class="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 transition"
+            aria-label="Report options">
+      <!-- simple flag icon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24"
+           stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 5v14M5 5c2.5 0 4 2 6 2s3.5-2 6-2-3.5 2-6 2S2.5 5 5 5z"/>
+      </svg>
+    </button>
+    <ul id="flagMenu"
+        class="hidden absolute top-10 right-3 mt-2 w-44 bg-white rounded-lg shadow-lg transform origin-top-right
+               transition ease-out duration-150 opacity-0 scale-95">
+      <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Report spam</a></li>
+      <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Report abuse</a></li>
+      <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Other…</a></li>
+    </ul>
+
+    <!-- Content -->
+    <div class="p-5 overflow-hidden">
+      <h2 id="cardTitle" class="text-xl font-semibold mb-2">
+        <!-- up to 72 chars -->
+        Example Card Title Goes Here
+      </h2>
+      <p id="cardText" class="text-gray-700 mb-4">
+        <!-- up to 288 chars -->
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum in neque et nisl.
+      </p>
+
+      <!-- Buttons -->
+      <div class="flex space-x-3 mb-4">
+        <button class="flex-1 bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+          Primary
+        </button>
+        <button class="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg hover:bg-gray-300 transition">
+          Secondary
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom icon bar -->
+    <div class="border-t px-5 py-3 flex items-center justify-between">
+      <!-- Shapes -->
+      <div class="flex space-x-4">
+        <!-- Square -->
+        <a href="#" class="p-2 rounded hover:bg-gray-100 transition" aria-label="Square">
+          <svg class="w-5 h-5 fill-current text-gray-600" viewBox="0 0 24 24">
+            <rect x="4" y="4" width="16" height="16"/>
+          </svg>
+        </a>
+        <!-- Triangle -->
+        <a href="#" class="p-2 rounded hover:bg-gray-100 transition" aria-label="Triangle">
+          <svg class="w-5 h-5 fill-current text-gray-600" viewBox="0 0 24 24">
+            <path d="M12 5l7 14H5z"/>
+          </svg>
+        </a>
+        <!-- Circle -->
+        <a href="#" class="p-2 rounded hover:bg-gray-100 transition" aria-label="Circle">
+          <svg class="w-5 h-5 fill-current text-gray-600" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="8"/>
+          </svg>
+        </a>
+        <!-- Hexagon -->
+        <a href="#" class="p-2 rounded hover:bg-gray-100 transition" aria-label="Hexagon">
+          <svg class="w-5 h-5 fill-current text-gray-600" viewBox="0 0 24 24">
+            <path d="M12 2l7 4v8l-7 4-7-4V6z"/>
+          </svg>
+        </a>
+      </div>
+      <!-- Ellipsis menu -->
+      <div class="relative">
+        <button id="optionsBtn"
+                class="p-2 rounded-full hover:bg-gray-100 transition"
+                aria-label="More options">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" fill="currentColor"
+               viewBox="0 0 20 20">
+            <path d="M6 10a2 2 0 114 0 2 2 0 01-4 0zm4 0a2 2 0 114 0 2 2 0 01-4 0z"/>
+          </svg>
+        </button>
+        <ul id="optionsMenu"
+            class="hidden absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg transform origin-top-right
+                   transition ease-out duration-150 opacity-0 scale-95">
+          <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Share</a></li>
+          <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Bookmark</a></li>
+          <li><a href="#" class="w-full block text-left px-4 py-2 hover:bg-gray-100">Delete</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    // Truncate title/text if too long
+    document.addEventListener('DOMContentLoaded', () => {
+      const titleEl = document.getElementById('cardTitle');
+      if (titleEl.textContent.length > 72) {
+        titleEl.textContent = titleEl.textContent.slice(0, 72) + '…';
+      }
+      const textEl = document.getElementById('cardText');
+      if (textEl.textContent.length > 288) {
+        textEl.textContent = textEl.textContent.slice(0, 288) + '…';
+      }
+    });
+
+    // Dropdown toggles
+    const flagBtn     = document.getElementById('flagBtn');
+    const flagMenu    = document.getElementById('flagMenu');
+    const optionsBtn  = document.getElementById('optionsBtn');
+    const optionsMenu = document.getElementById('optionsMenu');
+
+    function toggle(menu) {
+      const isHidden = menu.classList.contains('hidden');
+      // reset both classes for animation
+      menu.classList.toggle('hidden', !isHidden);
+      setTimeout(() => {
+        menu.classList.toggle('opacity-100', isHidden);
+        menu.classList.toggle('scale-100', isHidden);
+      }, 10);
+    }
+
+    flagBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggle(flagMenu);
+    });
+
+    optionsBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      toggle(optionsMenu);
+    });
+
+    // Close when clicking outside
+    document.addEventListener('click', () => {
+      [flagMenu, optionsMenu].forEach(menu => {
+        menu.classList.add('hidden');
+        menu.classList.remove('opacity-100', 'scale-100');
+      });
+    });
+  </script>
+</body>
+</html>

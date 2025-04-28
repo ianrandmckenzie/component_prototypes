@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Bar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="flex items-center justify-center h-screen bg-gray-100">
+    <!-- Toggle Button Component -->
+    <label class="inline-flex items-center gap-2" data-toggle-wrapper>
+        <!-- Hidden checkbox -->
+        <input type="checkbox" class="sr-only" id="toggle-checkbox" data-toggle-input />
+
+        <!-- Visual toggle track -->
+        <div class="w-10 h-6 bg-gray-300 dark:bg-gray-600 border border-gray-400 dark:border-gray-500 rounded-full relative transition-colors duration-200 ease-in-out cursor-pointer"
+            data-toggle-track>
+            <!-- Toggle handle -->
+            <span
+                class="absolute top-[0.05rem] left-0.5 w-5 h-5 bg-white dark:bg-gray-200 rounded-full shadow transform transition-transform duration-200 ease-in-out"
+                data-toggle-handle></span>
+        </div>
+
+        <!-- Optional label text -->
+        <span class="text-gray-700 dark:text-gray-200 select-none" data-toggle-label>
+            Toggle Label
+        </span>
+    </label>
+
+    <script>
+        (function () {
+            const wrapper = document.querySelector('[data-toggle-wrapper]');
+            const checkbox = wrapper?.querySelector('[data-toggle-input]');
+            const track = wrapper?.querySelector('[data-toggle-track]');
+            const handle = wrapper?.querySelector('[data-toggle-handle]');
+
+            if (!wrapper || !checkbox || !track || !handle) return;
+
+            function updateStyles() {
+                // Disabled state
+                if (checkbox.disabled) {
+                    track.classList.remove(
+                        'bg-gray-300', 'dark:bg-gray-600',
+                        'bg-green-500', 'dark:bg-green-400'
+                    );
+                    track.classList.add(
+                        'bg-gray-200', 'dark:bg-gray-700',
+                        'border-gray-300', 'dark:border-gray-600',
+                        'opacity-50', 'cursor-not-allowed'
+                    );
+                    handle.classList.remove('translate-x-3.5');
+                    handle.classList.add('bg-gray-100', 'dark:bg-gray-500');
+                    return;
+                }
+
+                // Enabled: remove disabled styles
+                track.classList.remove(
+                    'bg-gray-200', 'dark:bg-gray-700',
+                    'border-gray-300', 'dark:border-gray-600',
+                    'opacity-50', 'cursor-not-allowed'
+                );
+                handle.classList.remove('bg-gray-100', 'dark:bg-gray-500');
+
+                if (checkbox.checked) {
+                    console.log('wtf')
+                    // ON state
+                    track.classList.replace('bg-gray-300', 'bg-green-500');
+                    track.classList.replace('dark:bg-gray-600', 'dark:bg-green-400');
+                    track.classList.replace('border-gray-400', 'border-green-500');
+                    track.classList.replace('dark:border-gray-500', 'dark:border-green-400');
+                    handle.classList.add('translate-x-3.5');
+                } else {
+                    // OFF state
+                    track.classList.replace('bg-green-500', 'bg-gray-300');
+                    track.classList.replace('dark:bg-green-400', 'dark:bg-gray-600');
+                    track.classList.replace('border-green-500', 'border-gray-400');
+                    track.classList.replace('dark:border-green-400', 'dark:border-gray-500');
+                    handle.classList.remove('translate-x-3.5');
+                }
+            }
+
+            // Sync on init
+            updateStyles();
+
+            // Toggle on click
+            track.addEventListener('click', (e) => {
+                event.preventDefault()
+                if (checkbox.disabled) return;
+                checkbox.checked = !checkbox.checked;
+                checkbox.dispatchEvent(new Event('change'));
+            });
+
+            // Update on change
+            checkbox.addEventListener('change', updateStyles);
+        })();
+    </script>
+</body>
+
+</html>
